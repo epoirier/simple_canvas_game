@@ -8,12 +8,20 @@ var rightKey = 39;
 //seconds to play the game
 var gameTime = 20;
 
+//the game will start when the user presses a key
+var gameStart = false; 
+
+//globals for game timer
+var startTime = 0;
+var endTime = 99999999999999;
+
 // Create the canvas
+var canvasDiv = document.getElementById("canvasDiv");
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = 512;
 canvas.height = 480;
-document.body.appendChild(canvas);
+canvasDiv.appendChild(canvas);
 
 // Background image
 var bgReady = false;
@@ -51,11 +59,30 @@ var keysDown = {};
 
 addEventListener("keydown", function (e) {
 	keysDown[e.keyCode] = true;
+
+	//the game will start when the user presses a key
+	if(gameStart == false && isDirectionKey(e.keyCode)){
+		gameStart = true;
+
+		//start timer
+		startTime = Date.now();
+		endTime = startTime + (gameTime * 1000);
+	}
+
 }, false);
 
 addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
+
+var isDirectionKey = function(number){
+
+	if(number == upKey || number == downKey || number == rightKey || number == leftKey)
+		return true;
+
+	return false;
+
+}
 
 // Reset the game when the player catches a monster
 var reset = function () {
@@ -133,8 +160,9 @@ var getTime = function(){
 	
 	var thisTime = gameTime - ((Date.now() - startTime)/1000);
 	
-	if(thisTime < 0)
-		thisTime = 0;
+	if(thisTime < 0) thisTime = 0;
+
+	if(gameStart == false) return gameTime;
 
 	return thisTime.toFixed(2);
 }
@@ -142,6 +170,7 @@ var getTime = function(){
 
 // The main game loop
 var main = function () {
+
 	var now = Date.now();
 	var delta = now - then;
 
@@ -149,6 +178,7 @@ var main = function () {
 	render();
 
 	then = now;
+
 
 	if(now < endTime)
 	{
@@ -163,8 +193,6 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 
 // Let's play this game!
 var then = Date.now();
-var startTime = then;
-var endTime = then + (gameTime * 1000);
 
 reset();
 main();
