@@ -6,7 +6,7 @@ var rightKey = 39;
 
 //length of game in seconds
 //seconds to play the game
-var gameTime = 20;
+var gameTime = 60;
 
 //the game will start when the user presses a key
 var gameStart = false; 
@@ -152,7 +152,7 @@ var render = function () {
 	ctx.fillText("Score: " + monstersCaught, 32, 32);
 
 	ctx.textAlign = "right";
-	ctx.fillText(getTime(), canvas.width - 32, 32);
+	ctx.fillText("Time: " + getTime(), canvas.width - 32, 32);
 };
 
 
@@ -162,7 +162,7 @@ var getTime = function(){
 	
 	if(thisTime < 0) thisTime = 0;
 
-	if(gameStart == false) return gameTime;
+	if(gameStart == false) return gameTime.toFixed(2);
 
 	return thisTime.toFixed(2);
 }
